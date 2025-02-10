@@ -16,21 +16,122 @@ WebServer server(80);
 
 // HTML para subir la imagen JPEG
 const char* uploadHTML = R"rawliteral(
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Subir Imagen JPEG</title>
-  </head>
-  <body>
-    <h1>Subir Imagen JPEG (asegúrate de rotarla 90° antes de enviarla)</h1>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-      <input type="file" name="uploadfile" accept=".jpg" required>
-      <input type="submit" value="Subir">
-    </form>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Captura de Fotogramas de Video</title>
+  <style>
+    /* Puedes ocultar el canvas o mostrarlo para depuración */
+    #canvasFrame {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Seleccionar Video y Capturar Fotogramas</h1>
+  <!-- Input para seleccionar video -->
+  <input type="file" id="videoInput" accept="video/*">
+  <br><br>
+  <!-- Elemento de video: se espera que el video tenga resolución 240x135 -->
+  <video id="videoPlayer" width="240" height="135" controls></video>
+  <br><br>
+  <!-- Canvas para capturar y rotar el fotograma.
+       Se define con dimensiones 135x240 ya que se rota 90° -->
+  <canvas id="canvasFrame" width="135" height="240"></canvas>
+  <br>
+  <button id="startCapture">Iniciar Captura</button>
+  <button id="stopCapture">Detener Captura</button>
+
+  <script>
+    // Referencias a los elementos
+    const videoInput = document.getElementById('videoInput');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const canvasFrame = document.getElementById('canvasFrame');
+    const startCapture = document.getElementById('startCapture');
+    const stopCapture = document.getElementById('stopCapture');
+    let captureInterval;
+
+    // Cuando se selecciona un video, se carga en el elemento video
+    videoInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        videoPlayer.src = url;
+      }
+    });
+
+    // Inicia la captura de fotogramas cada 1 segundo
+    startCapture.addEventListener('click', function() {
+      videoPlayer.play();
+      captureInterval = setInterval(captureFrameAndSend, 4000); // Cada 1 segundo
+    });
+
+    // Detiene la captura
+    stopCapture.addEventListener('click', function() {
+      clearInterval(captureInterval);
+    });
+
+    // Función que captura un fotograma, lo rota 90° y lo envía al servidor
+    function captureFrameAndSend() {
+      const ctx = canvasFrame.getContext('2d');
+      // Limpiar el canvas
+      ctx.clearRect(0, 0, canvasFrame.width, canvasFrame.height);
+      
+      // Guardar el estado actual
+      ctx.save();
+      // Para rotar 90° (horario) se hace:
+      // 1. Se traslada el contexto al ancho del canvas (nueva base en la esquina superior derecha)
+      // 2. Se rota 90° (Math.PI/2 radianes)
+      ctx.translate(canvasFrame.width, 0);
+      ctx.rotate(Math.PI / 2);
+      
+      // Dibujar el fotograma del video en el canvas
+      // El video tiene 240x135 y, al rotarlo, se adapta al canvas (135x240)
+      ctx.drawImage(videoPlayer, 0, 0, 240, 135);
+      
+      // Restaurar el estado original del contexto
+      ctx.restore();
+      
+      // Convertir el contenido del canvas a un data URL en formato JPEG
+      const dataURL = canvasFrame.toDataURL('image/jpeg');
+      
+      // Convertir el data URL a Blob para poder enviarlo en un FormData
+      const blob = dataURItoBlob(dataURL);
+      
+      // Preparar FormData con el fotograma
+      const formData = new FormData();
+      formData.append("uploadfile", blob, "frame.jpg");
+      
+      // Enviar el fotograma al servidor (endpoint /uploadFrame)
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        console.log('Fotograma enviado correctamente.');
+      })
+      .catch(error => {
+        console.error('Error al enviar el fotograma:', error);
+      });
+    }
+
+    // Función para convertir un dataURL a Blob
+    function dataURItoBlob(dataURI) {
+      const byteString = atob(dataURI.split(',')[1]);
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    }
+  </script>
+</body>
 </html>
+
 )rawliteral";
 
 // ================== Función para dibujar el JPEG usando JPEGDecoder y TFT_eSPI ==================
@@ -174,7 +275,7 @@ void setup() {
   tft.init();
 
   // Configurar la rotación para girar la imagen 90° (esto intercambia las dimensiones de la pantalla)
-  tft.setRotation(1);
+  tft.setRotation(0);
   
   // Habilitar el intercambio de bytes, si es necesario para el formato de color
   tft.setSwapBytes(true);
