@@ -2,7 +2,7 @@
 
 This project allows video streaming from a PC or mobile device to an **ST7789** screen using an **ESP32** configured as an Access Point. The ESP32 hosts a web server with WebSocket support, enabling a client (e.g., a web browser) to capture and send **JPEG**-compressed frames on demand. The frames are decoded on the ESP32 and displayed on the ST7789 screen, with optimizations that reduce flickering and improve synchronization.
 
-[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/esp32-video-streaming/refs/heads/main/image.jpg)](https://www.youtube.com/watch?v=Cykcpi9xnGo)
+[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/esp32-video-streaming/refs/heads/main/image.jpg)](https://youtu.be/23evMsoWspA)
 
 ---
 
