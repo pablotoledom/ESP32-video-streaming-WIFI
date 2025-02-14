@@ -2,7 +2,9 @@
 
 This project allows video streaming from a PC or mobile device to an **ST7789** screen using an **ESP32** configured as an Access Point. The ESP32 hosts a web server with WebSocket support, enabling a client (e.g., a web browser) to capture and send **JPEG**-compressed frames on demand. The frames are decoded on the ESP32 and displayed on the ST7789 screen, with optimizations that reduce flickering and improve synchronization.
 
-[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/ESP32-video-streaming-WIFI/refs/heads/wifi-video-stream/image.jpg)](https://youtu.be/23evMsoWspA)
+[Click aquí­ para ver el archivo léame (README) en español](https://github.com/pablotoledom/ESP32-video-streaming-WIFI/blob/main/README_ESPANOL.md)
+
+[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/ESP32-video-streaming-WIFI/refs/heads/ESP32-video-streaming-WIFI/image.jpg)](https://youtu.be/23evMsoWspA)
 
 ---
 
@@ -27,7 +29,7 @@ This project allows video streaming from a PC or mobile device to an **ST7789** 
 ### 🔹 **Software and Libraries**
 
 #### 📂 **On the ESP32 (Arduino)**
-Install the following libraries in **Arduino IDE**, If you can't find them in the Arduino library, you can copy them directly to your computer from the arduino/libraries directory of this project and copy them into the libraries folder that the Arduino software creates on your PC:
+Install the following libraries in **Arduino IDE**, If you can't find them in the Arduino library, you can copy them directly to your computer from the **arduino/libraries** directory of this project and copy them into the libraries folder that the Arduino software creates on your PC:
 - [`TFT_eSPI`](https://github.com/Bodmer/TFT_eSPI) → ST7789 screen handling.
 - [`JPEGDecoder`](https://github.com/Bodmer/JPEGDecoder) → JPEG image decoding.
 - [`ESPAsyncWebServer`](https://github.com/me-no-dev/ESPAsyncWebServer) and [`AsyncTCP`](https://github.com/me-no-dev/AsyncTCP) → Web server and WebSocket communication.
@@ -71,7 +73,7 @@ The ESP32 hosts a web page that allows:
    | **5**     | **DC**     |
    | **23**    | **CS**     |
    | **4**     | **RST**    |
-3. The ESP32 will be configured as an Access Point using the SSID and password defined in the code (e.g., `"ArdillasFamily"` / `"MilE#1403.$"`).
+3. The ESP32 will be configured as an Access Point using the SSID and password defined in the code (e.g., `"ESP32-WIFI-video"` / `"TRC12345678"`).
 4. Upload the code to the ESP32.
 
 ### 2️⃣ **Connect and Use the Web Interface**
