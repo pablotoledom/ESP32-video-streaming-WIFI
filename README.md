@@ -4,7 +4,7 @@ This project allows video streaming from a PC or mobile device to an **ST7789** 
 
 [Click aquí­ para ver el archivo léame (README) en español](https://github.com/pablotoledom/ESP32-video-streaming-WIFI/blob/main/README_ESPANOL.md)
 
-[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/ESP32-video-streaming-WIFI/refs/heads/image.jpg)](https://youtu.be/23evMsoWspA)
+[![IMAGE Esp32 showing DooM video](https://raw.githubusercontent.com/pablotoledom/ESP32-video-streaming-WIFI/refs/heads/main/image.jpg)](https://youtu.be/23evMsoWspA)
 
 ---
 
